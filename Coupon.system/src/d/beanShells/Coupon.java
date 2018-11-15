@@ -24,8 +24,13 @@ public class Coupon {
 		super();
 		this.id = id;
 		this.title = title;
-		this.startDate = startDate;
-		this.endDate = endDate;
+		if (startDate.after(endDate)) {
+			this.startDate = endDate;
+			this.endDate = startDate;
+		} else {
+			this.startDate = startDate;
+			this.endDate = endDate;
+		}
 		this.amount = amount;
 		this.type = type;
 		this.message = message;

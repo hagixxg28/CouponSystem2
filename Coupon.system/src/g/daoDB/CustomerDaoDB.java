@@ -34,7 +34,6 @@ public class CustomerDaoDB implements CustomerDao {
 			stmt.setString(2, cust.getCustName());
 			stmt.setString(3, cust.getPassword());
 			stmt.executeUpdate();
-			System.out.println(cust + " has been added");
 		} catch (SQLException e) {
 			throw new CustomerAlreadyExistsException("This customer already exists");
 		} finally {
@@ -49,7 +48,6 @@ public class CustomerDaoDB implements CustomerDao {
 		Connection con = pool.getConnection();
 		try (PreparedStatement stmt = con.prepareStatement(sql);) {
 			stmt.executeUpdate();
-			System.out.println(cust + " was removed");
 		} catch (SQLException e) {
 			throw new CustomerDoesNotExistException("This customer does not exist");
 		} finally {
@@ -67,8 +65,6 @@ public class CustomerDaoDB implements CustomerDao {
 			stmt.setString(2, cust.getPassword());
 			stmt.setLong(3, cust.getId());
 			stmt.executeUpdate();
-			System.out.println(cust + " was updated");
-
 		} catch (SQLException e) {
 			throw new CustomerDoesNotExistException("This customer does not exist");
 		} finally {

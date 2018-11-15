@@ -50,7 +50,6 @@ public class CompanyDaoDB implements CompanyDao {
 			stmt.setLong(1, comp.getId());
 			stmt.executeUpdate();
 			comp.getCoupons().clear();
-			System.out.println(comp + " was removed");
 		} catch (SQLException e) {
 			throw new DaoException("Company was not found");
 		} finally {
@@ -67,8 +66,6 @@ public class CompanyDaoDB implements CompanyDao {
 			stmt.setString(2, comp.getEmail());
 			stmt.setLong(3, comp.getId());
 			stmt.executeUpdate();
-			System.out.println(comp + " was updated");
-
 		} catch (SQLException e) {
 			throw new DaoException("Company was not found");
 		} finally {
@@ -83,7 +80,6 @@ public class CompanyDaoDB implements CompanyDao {
 		String sql = "SELECT * FROM company WHERE comp_id=" + comp.getId();
 		Connection con = pool.getConnection();
 		try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery(sql);) {
-
 			while (rs.next()) {
 				other.setId(rs.getLong("comp_id"));
 				other.setCompName(rs.getString("name"));
@@ -91,7 +87,6 @@ public class CompanyDaoDB implements CompanyDao {
 				other.setEmail(rs.getString("email"));
 				other.setCoupons(getAllCoupons(comp));
 			}
-
 		} catch (SQLException e) {
 			throw new DaoException("No company was found");
 		} finally {
