@@ -15,10 +15,6 @@ public class Coupon {
 	private double price;
 	private String image;
 
-	public Coupon() {
-		super();
-	}
-
 	public Coupon(long id, String title, Date startDate, Date endDate, int amount, CouponType type, String message,
 			double price, String image) {
 		super();
@@ -36,6 +32,10 @@ public class Coupon {
 		this.message = message;
 		this.price = price;
 		this.image = image;
+	}
+
+	public Coupon() {
+		super();
 	}
 
 	public long getId() {

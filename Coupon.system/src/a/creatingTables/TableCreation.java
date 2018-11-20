@@ -6,8 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class TableCreation {
-	public static void main(String[] args) {
 
+	public void createAll() {
 		String driverName = "org.apache.derby.jdbc.ClientDriver";
 		String url = "jdbc:derby://localhost:1527/coupon_db";
 		String sql1 = "CREATE TABLE company(comp_id BIGINT PRIMARY KEY, name VARCHAR(50), password VARCHAR(50), email VARCHAR(50))";
@@ -41,5 +41,4 @@ public class TableCreation {
 			e.printStackTrace();
 		}
 	}
-
 }

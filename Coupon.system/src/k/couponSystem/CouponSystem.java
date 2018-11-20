@@ -23,12 +23,12 @@ public class CouponSystem {
 	private Thread thread = new Thread(task);
 
 	private CouponSystem() {
-		System.out.println("Creating a new system");
+//		System.out.println("Creating a new system");
 		compDb = new CompanyDaoDB();
 		custDb = new CustomerDaoDB();
-		System.out.println("Loaded DaoDB");
+//		System.out.println("Loaded DaoDB");
 		thread.start();
-		System.out.println("Loaded thread");
+//		System.out.println("Loaded thread");
 	}
 
 	public static CouponSystem getInstance() {
@@ -56,7 +56,7 @@ public class CouponSystem {
 			if (compDb.login(id, password)) {
 				CompanyFacade facade = new CompanyFacade();
 				System.out.println("Welcome company");
-				facade.custLogin(id, password);
+				facade.compLogin(id, password);
 				client = facade;
 				return client;
 			} else {

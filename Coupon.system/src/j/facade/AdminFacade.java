@@ -98,7 +98,7 @@ public class AdminFacade implements CouponClientFacade {
 				throw new CustomerAlreadyExistsException("A customer with this id already exists");
 			}
 		} catch (DaoException e) {
-			throw new FacadeException("Something went wrong");
+			throw new FacadeException("A customer with this id already exists");
 		}
 	}
 

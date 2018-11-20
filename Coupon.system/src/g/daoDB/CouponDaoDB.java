@@ -101,7 +101,6 @@ public class CouponDaoDB implements CouponDao {
 			stmt.setString(8, coup.getImage());
 			stmt.setLong(9, coup.getId());
 			stmt.executeUpdate();
-			System.out.println(coup + " was updated");
 		} catch (SQLException e) {
 			throw new CouponDoesNotExistException("This coupon does not exist");
 		} finally {
@@ -112,19 +111,19 @@ public class CouponDaoDB implements CouponDao {
 	@Override
 	public Coupon getCoupon(Coupon coup) throws DaoException {
 		Coupon otherCoup = new Coupon();
-		String sql = String.format("SELECT * FROM coupon WHERE coup_id=%d", coup.getId());
+		String sql = "SELECT * FROM coupon WHERE coup_id=" + coup.getId();
 		Connection con = pool.getConnection();
 		try (PreparedStatement stmt = con.prepareStatement(sql); ResultSet rs = stmt.executeQuery();) {
 			while (rs.next()) {
-				coup.setId(rs.getLong("coup_id"));
-				coup.setTitle(rs.getString("title"));
-				coup.setStartDate(rs.getDate("start_date"));
-				coup.setEndDate(rs.getDate("end_date"));
-				coup.setAmount(rs.getInt("amount"));
-				coup.setType(CouponType.typeSort(rs.getString("type")));
-				coup.setMessage(rs.getString("message"));
-				coup.setPrice(rs.getDouble("price"));
-				coup.setImage(rs.getString("image"));
+				otherCoup.setId(rs.getLong("coup_id"));
+				otherCoup.setTitle(rs.getString("title"));
+				otherCoup.setStartDate(rs.getDate("start_date"));
+				otherCoup.setEndDate(rs.getDate("end_date"));
+				otherCoup.setAmount(rs.getInt("amount"));
+				otherCoup.setType(CouponType.typeSort(rs.getString("type")));
+				otherCoup.setMessage(rs.getString("message"));
+				otherCoup.setPrice(rs.getDouble("price"));
+				otherCoup.setImage(rs.getString("image"));
 			}
 
 		} catch (SQLException e) {
@@ -186,17 +185,13 @@ public class CouponDaoDB implements CouponDao {
 	@Override
 	public void customerPurchaseCoupon(Coupon coup, Customer cust) throws DaoException {
 		String sql2 = "INSERT INTO customer_coupon VALUES(?, ?)";
-		if (customerOwnsCoupon(coup, cust)) {
-			Connection con = pool.getConnection();
-			try (PreparedStatement stmt2 = con.prepareStatement(sql2);) {
-				stmt2.setLong(1, cust.getId());
-				stmt2.setLong(2, coup.getId());
-				stmt2.executeUpdate();
-				System.out.println(coup + " has been purchased");
-			} catch (SQLException e) {
-				throw new CouponAlreadyExistsException("This coupon already exists for this customer");
-			}
-		} else {
+		Connection con = pool.getConnection();
+		try (PreparedStatement stmt2 = con.prepareStatement(sql2);) {
+			stmt2.setLong(1, cust.getId());
+			stmt2.setLong(2, coup.getId());
+			stmt2.executeUpdate();
+			System.out.println(coup + " has been purchased");
+		} catch (SQLException e) {
 			throw new CouponAlreadyExistsException("This coupon already exists for this customer");
 		}
 	}
@@ -255,23 +250,26 @@ public class CouponDaoDB implements CouponDao {
 
 	}
 
-	public boolean customerOwnsCoupon(Coupon coup, Customer cust) throws DaoException {
-		String sql2 = "SELECT * customer_coupon WHERE cust_id=? AND coup_id=?";
-		Connection con = pool.getConnection();
-		Collection<Object> collection = new ArrayList<>();
-		try (PreparedStatement stmt2 = con.prepareStatement(sql2); ResultSet rs = stmt2.executeQuery();) {
-			while (rs.next()) {
-				rs.getObject("cust_id");
-				rs.getObject("coup_id");
-			}
-			if (collection.isEmpty()) {
-				return false;
-			} else {
-				return true;
-			}
-		} catch (SQLException e) {
-			throw new CouponAlreadyExistsException("No coupons were found");
-		}
-	}
+//	NOT USED AT THE MOMENT
+//	public boolean customerOwnsCoupon(Coupon coup, Customer cust) throws DaoException {
+//		String sql2 = "SELECT * customer_coupon WHERE cust_id=" + cust.getId() + " AND coup_id=" + coup.getId();
+//		Connection con = pool.getConnection();
+//		Collection<Object> collection = new ArrayList<>();
+//		try (PreparedStatement stmt2 = con.prepareStatement(sql2); ResultSet rs = stmt2.executeQuery();) {
+//			while (rs.next()) {
+//				rs.getLong("cust_id");
+//				rs.getLong("coup_id");
+//			}
+//			if (collection.isEmpty()) {
+//				System.out.println("passed own check");
+//				return false;
+//			} else {
+//				System.out.println("failed own check");
+//				return true;
+//			}
+//		} catch (SQLException e) {
+//			throw new CouponAlreadyExistsException("No coupons were found");
+//		}
+//	}
 
 }

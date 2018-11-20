@@ -62,7 +62,7 @@ public class CustomerFacade implements CouponClientFacade {
 			coup.setAmount(coup.getAmount() - 1);
 			coupDb.updateCoupon(coup);
 		} catch (DaoException e) {
-			throw new FacadeException("You already own this coupon");
+			throw new FacadeException("You already own this coupon/Other exception");
 		}
 	}
 // IF YOU ADD COUPHISTORY YOU NEED TO ADD THIS CODE TO PURCHASE COUPON

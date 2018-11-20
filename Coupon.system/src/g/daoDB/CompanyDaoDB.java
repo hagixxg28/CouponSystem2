@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import b.exceptions.DaoExceptions.CustomerDoesNotExistException;
 import b.exceptions.DaoExceptions.DaoException;
 import c.connectionPool.ConnectionPool;
 import d.beanShells.Company;
@@ -59,15 +60,16 @@ public class CompanyDaoDB implements CompanyDao {
 
 	@Override
 	public void updateCompany(Company comp) throws DaoException {
-		String sql = "UPDATE company SET password=?, email=?  WHERE comp_id=?";
+		String sql = "UPDATE company SET name=?, password=?,email=? WHERE comp_id=?";
 		Connection con = pool.getConnection();
 		try (PreparedStatement stmt = con.prepareStatement(sql);) {
-			stmt.setString(1, comp.getPassword());
-			stmt.setString(2, comp.getEmail());
-			stmt.setLong(3, comp.getId());
+			stmt.setString(1, comp.getCompName());
+			stmt.setString(2, comp.getPassword());
+			stmt.setString(3, comp.getEmail());
+			stmt.setLong(4, comp.getId());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new DaoException("Company was not found");
+			throw new CustomerDoesNotExistException("This customer does not exist");
 		} finally {
 			pool.returnConnection(con);
 		}

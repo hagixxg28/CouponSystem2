@@ -29,12 +29,22 @@ public class CompanyFacade implements CouponClientFacade {
 		Collection<Coupon> List;
 		try {
 			List = db.getAllCoupons(currentComp);
+			if (List.isEmpty()) {
+				coupDb.createCoupon(coup, currentComp);
+				List.add(coup);
+				Company comp = db.readCompany(currentComp);
+				comp.setCoupons(List);
+				System.out.println("List is empty so added");
+				return;
+			}
 			for (Coupon coupon : List) {
-				if (coupon.getTitle().equals(coup.getTitle())) {
+				if (!coupon.getTitle().equals(coup.getTitle())) {
 					coupDb.createCoupon(coup, currentComp);
 					List.add(coup);
 					Company comp = db.readCompany(currentComp);
 					comp.setCoupons(List);
+					System.out.println("List was not empty so added");
+					return;
 				}
 			}
 		} catch (DaoException e) {
@@ -42,7 +52,7 @@ public class CompanyFacade implements CouponClientFacade {
 		}
 	}
 
-	public void custLogin(Long id, String password) throws FacadeException {
+	public void compLogin(Long id, String password) throws FacadeException {
 		try {
 			if (db.login(id, password)) {
 				currentComp.setId(id);
@@ -78,18 +88,8 @@ public class CompanyFacade implements CouponClientFacade {
 	}
 
 	public void updateCoupon(Coupon coup) throws FacadeException {
-		Double newPrice = coup.getPrice();
-		Date newDate = coup.getEndDate();
-		Coupon updatedCoup;
 		try {
-			updatedCoup = coupDb.getCoupon(coup);
-		} catch (DaoException e) {
-			throw new NoCouponsException("There is no such coupon in the Database");
-		}
-		updatedCoup.setPrice(newPrice);
-		updatedCoup.setEndDate(newDate);
-		try {
-			coupDb.updateCoupon(updatedCoup);
+			coupDb.updateCoupon(coup);
 		} catch (DaoException e) {
 			throw new NoCouponsException("There is no such coupon in the Database");
 		}
